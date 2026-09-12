@@ -1,0 +1,13 @@
+# Config settings for Jekyll site rendering.
+
+title: Google Style Guides
+
+# THe current GH default theme is the 2.x minima release series which does not
+# support darkmode.  Pin to a specific version since 3.x isn't released yet.
+remote_theme: "jekyll/minima@4de322363fca5927e6f4012cb94f6dad69ab5e6c"
+
+plugins:
+  - jekyll-remote-theme
+
+minima:
+  skin: auto
