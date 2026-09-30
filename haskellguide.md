@@ -3,7 +3,7 @@
 Revision 1.01
 
 <a id="Background"></a>
-## Background 
+## Background
 
 Haskell is a mature, general purpose, purely functional language. It is noted
 for its strong static type system (with type inference), lazy (technically,
@@ -18,10 +18,10 @@ there are just fewer arbitrary choices to make when coding Haskell.
 Open-source projects developed by Google should conform to the requirements in this guide.
 
 <a id="Structure"></a>
-## Structure 
+## Structure
 
 <a id="Haddock"></a>
-### Haddock 
+### Haddock
 
 The module and all exported top-level elements should have Haddock.
 
@@ -32,6 +32,8 @@ Write proper sentences; start with a capital letter and use proper punctuation.
 
 **Exception:** Extremely simple type synonyms or other very obvious declarations
 need not have any Haddock.
+
+<div class='goodcode'></div>
 
 ```haskell
 type Forest p a = [Tree p a]    -- simple enough to not need Haddock
@@ -50,7 +52,7 @@ necessary to add links for all API names. Add a link if:
     repeating a link).
 
 <a id="Exports"></a>
-### Exports 
+### Exports
 
 *   All modules should have an explicit export list.
 *   Format like all lists, starting on new line after `module`.
@@ -70,7 +72,7 @@ bulk of the exported definitions are generated with Template Haskell, since
 explicitly naming them in the export list would be counter-productive.
 
 <a id="Imports"></a>
-### Imports 
+### Imports
 
 *   Imports may be split up into groups separated by a single newline.
 *   Recommended: Split imports into two groups: external and
@@ -104,6 +106,8 @@ import qualified Data.Text.Lazy as TL
 
 Putting these all together:
 
+<div class='goodcode'></div>
+
 ```haskell
 import Data.Bits                             -- okay for some modules
 import Data.Maybe (mapMaybe, maybeToList)    -- better to list what you use...
@@ -118,7 +122,7 @@ import AnInternalProject.Data.WhoopTree      -- okay to import all, but discoura
 ```
 
 <a id="Pragmas"></a>
-### Pragmas 
+### Pragmas
 
 GHC options and `LANGUAGE` pragmas go at the very top of the file.
 
@@ -169,7 +173,7 @@ Other GHC extensions should be avoided, as they may or may not be stable,
 increase the burden on readers to know them, and may force clients to use them.
 
 <a id="Warnings"></a>
-### Warnings 
+### Warnings
 
 Code should compile cleanly with no warnings from GHC.
 
@@ -185,10 +189,10 @@ declaration, warnings about orphans can be suppressed by adding `{-# OPTIONS_GHC
 -fno-warn-orphans #-}` line at the top of the relevant file.
 
 <a id="Style"></a>
-## Style 
+## Style
 
 <a id="Layout"></a>
-### Layout 
+### Layout
 
 Use layout, rather than braces and semicolons.
 
@@ -196,7 +200,7 @@ Except for one-liners, use layout rather than braces and semicolons. It makes
 for clearer code.
 
 <a id="Type_Declarations"></a>
-### Type Declarations 
+### Type Declarations
 
 All top level functions should have type declarations.
 
@@ -207,7 +211,7 @@ documentation.
 Where reasonable, use the most polymorphic possible type.
 
 <a id="Comments"></a>
-### Comments 
+### Comments
 
 Use `--` for all comments except pragmas, or where the comment must be in the
 middle of a line.
@@ -225,13 +229,15 @@ should be used to explain any non-obvious reasoning for why something was done a
 particular way, or is particularly tricky.
 
 <a id="if_then_else"></a>
-### if…then…else 
+### if…then…else
 
 Consider using guards and pattern matches over `if`…`then`…`else`.
 
 Generally, pattern matches and guards are clearer at the outer level of a
 function than nested `if` and `case` constructs. However, elsewhere `if` might
 be more clear. Use your judgement.
+
+<div class='badcode'></div>
 
 ```haskell
 nth :: Int -> [a] -> Maybe a
@@ -242,6 +248,8 @@ nth i xs = if null xs || i < 0
         else nth (i-1) (tail xs)
 ```
 
+<div class='goodcode'></div>
+
 ```haskell
 nth :: Int -> [a] -> Maybe a
 nth i _     | i < 0 = Nothing
@@ -251,13 +259,13 @@ nth i (_:xs)        = nth (i-1) xs
 ```
 
 <a id="Idioms"></a>
-## Idioms 
+## Idioms
 
 Functional programming has given rise to a large number of new programming
 idioms. The following idioms are encouraged:
 
 <a id="Partial_Functions"></a>
-### Partial Functions 
+### Partial Functions
 
 [Partial functions](https://www.haskell.org/haskellwiki/Partial_functions) are
 those that are not defined for all possible arguments.
@@ -268,6 +276,8 @@ Commonly used examples are: `head`, `(!!)`, `minimum`, `fromJust`, and `read`.
 **Exception:** In cases where pattern matching, guards, or other logic
 immediately nearby makes it certain that these functions are applied safely, it
 is acceptable to call them.
+
+<div class='goodcode'></div>
 
 ```haskell
 defaultChoice :: [String] -> String
@@ -300,7 +310,7 @@ insert s pt = case filter (not . null . greatestCommonPrefix s) $ ptSubs pt of
 ```
 
 <a id="Point_Free"></a>
-### Point-Free 
+### Point-Free
 
 [Point-free style](http://www.haskell.org/haskellwiki/Haskell/Pointfree) is fine
 and often leads to concise code that focuses on what the code does, rather than
@@ -309,9 +319,13 @@ on what it does it to.
 However, avoid over-using it. For example, do not use contorted point free just
 to handle multiple arguments:
 
+<div class='badcode'></div>
+
 ```haskell
 f = (g .) . h       -- makes most of us puzzle it out
 ```
+
+<div class='goodcode'></div>
 
 ```haskell
 f x = g . h x       -- most readers will get this immediately
@@ -319,13 +333,13 @@ f x y = g $ h x y   -- depending on the functions, this may or may not be better
 ```
 
 <a id="Combinators"></a>
-### Combinators 
+### Combinators
 
 Libraries designed to be combinators produce very powerful tools for other
 developers. Examples to learn from are Parsec and PrettyPrint.
 
 <a id="QuickCheck"></a>
-### QuickCheck 
+### QuickCheck
 
 Tests should be written with QuickCheck whenever possible. This form of testing
 is surprisingly effective. Use HUnit for special cases that need explicit
@@ -337,10 +351,10 @@ warning about orphan instances.) Such instances should be sure to weight cases
 equally, or if they don't, explain why.
 
 <a id="Naming"></a>
-## Naming 
+## Naming
 
 <a id="General_Rules"></a>
-### General Rules 
+### General Rules
 
 Use mixed-case identifiers, without underscores.
 
@@ -364,6 +378,8 @@ values like: `fib` and `fib'`.
 Use the common idiom of plural for the lists: For example, a pattern match
 against a list might be `(a:as)`. (See also Short Variables, below.)
 
+<div class='badcode'></div>
+
 ```haskell
 simpleMetricComputer :: Double -> Set Things -> Double
 simpleMetricComputer _ things = ...
@@ -374,6 +390,8 @@ map _f [] = []
 map f (a:as) = f a : map f as
     -- no need to name _f in first clause, as it is clear from the second clause
 ```
+
+<div class='goodcode'></div>
 
 ```haskell
 simpleMetricComputer :: Double -> Set Things -> Double
@@ -387,13 +405,15 @@ map f (a:as) = f a : map f as
 ```
 
 <a id="Short_Variables"></a>
-### Short Variables 
+### Short Variables
 
 Short and single letter variable names are fine.
 
 Where the scope of a variable name is over just a few lines, short or single
 letter variable names are acceptable and even encouraged. Generally, they help
 expose the structure of the code.
+
+<div class='badcode'></div>
 
 ```haskell
 nextAfter :: Eq element => element -> [element] -> Maybe element
@@ -402,6 +422,8 @@ nextAfter match (current:next:remainder) =
                         else nextAfter match (next:remainder)
 nextAfter _ _ = Nothing
 ```
+
+<div class='goodcode'></div>
 
 ```haskell
 nextAfter :: Eq a => a -> [a] -> Maybe a
@@ -412,7 +434,7 @@ nextAfter _ _ = Nothing
 ```
 
 <a id="Module_Names"></a>
-### Modules 
+### Modules
 
 Use singular when naming modules.
 
@@ -420,14 +442,18 @@ Use `Data.Map` and `Data.ByteString.Internal` instead of `Data.Maps` and
 `Data.ByteString.Internals`.
 
 <a id="Abbreviations"></a>
-### Abbreviations 
+### Abbreviations
 
 Abbreviations in names should be mixed-case.
+
+<div class='badcode'></div>
 
 ```haskell
 HTTPResponse
 IPBlock
 ```
+
+<div class='goodcode'></div>
 
 ```haskell
 HttpResponse
@@ -439,15 +465,17 @@ particular case usage of a term. In this case, it is acceptable to retain a
 specific choice. Note that this does not apply to things like `HTTP` which are
 all caps in common usage simply because they are an abbreviation.
 
+<div class='goodcode'></div>
+
 ```haskell
 GREoIPsec  -- acceptable because specific precedent for this form exists
 ```
 
 <a id="Formatting"></a>
-## Formatting 
+## Formatting
 
 <a id="Vertical_Spacing"></a>
-### Vertical Spacing 
+### Vertical Spacing
 
 Vertical white space is to be used sparingly, ensuring that more context can be
 seen in a screenful.
@@ -457,6 +485,8 @@ should be used between the module imports and the first top level declaration,
 and between major sections of the file, if needed. No blank lines are required
 between declarations in a where clause, but are sometimes used if there are many
 or longer declarations.
+
+<div class='goodcode'></div>
 
 ```haskell
 {-# OPTIONS_GHC -fno-warn-orphans #-}
@@ -492,7 +522,7 @@ rleDecode = concatMap (uncurry replicate)
 ```
 
 <a id="Horizontal_Spacing"></a>
-### Horizontal Spacing 
+### Horizontal Spacing
 
 *   80 columns wide
 *   No trailing spaces
@@ -500,6 +530,8 @@ rleDecode = concatMap (uncurry replicate)
 The aim is to have horizontal spacing help show the structure of the
 expressions. It is acceptable, and even encouraged, to use horizontal spacing to
 make the structural relationship between clauses clear.
+
+<div class='goodcode'></div>
 
 ```haskell
 -- | Run-length encode a sequence of elements.
@@ -514,6 +546,8 @@ rleEncode (a:as) = go 1 a as
 
 Data declarations should also follow these rules:
 
+<div class='goodcode'></div>
+
 ```haskell
 data Tree a = Branch a (Tree a) (Tree a)
             | Leaf
@@ -524,7 +558,7 @@ data HttpException
 ```
 
 <a id="Indentation"></a>
-### Indentation 
+### Indentation
 
 *   Indents on 4 space intervals
 *   No tabs
@@ -536,6 +570,8 @@ Parts of an expression that are continued on another line, are indented one
 indent from the indent of the preceding line, not from the construct that they
 are continuting. (Though see the preceding section about using alignment to make
 structure clear, and use your judgement.)
+
+<div class='goodcode'></div>
 
 ```haskell
 arbitrary = arbitrary >>= \b -> if b
@@ -551,13 +587,15 @@ arbitrary = arbitrary >>= \b -> if b
 ```
 
 <a id="Comment_Formatting"></a>
-### Comments 
+### Comments
 
 *   Use `--` comments
 *   Use 2 or more spaces between code and comments
 
 Separate end-of-line comments from the code using 2 spaces. Align comments for
 data type definitions:
+
+<div class='goodcode'></div>
 
 ```haskell
 data CommandSummary = CommandSummary
@@ -570,7 +608,7 @@ data CommandSummary = CommandSummary
 ```
 
 <a id="Where"></a>
-### where 
+### where
 
 To separate the local declarations from the main expression, use a *hanging
 indent* for `where`. For all other uses (module, class, and instance
@@ -600,7 +638,7 @@ updateFlowTable u tbl = case u of
 ```
 
 <a id="Deriving"></a>
-### deriving 
+### deriving
 
 The `deriving` clause can trail the declaration, or go on a line of its own.
 
@@ -625,11 +663,13 @@ data Employee = Employee
 ```
 
 <a id="case_of"></a>
-### case…of 
+### case…of
 
 The `of` token appears on the same line as the `case` token. Indent the cases.
 
 Align the `->` arrows when it helps readability.
+
+<div class='goodcode'></div>
 
 ```haskell
 foobar = case something of
@@ -638,10 +678,12 @@ foobar = case something of
 ```
 
 <a id="let_in"></a>
-### let…in 
+### let…in
 
 The `in` token appears on the line after the line with the `let` token, lined up
 with it.
+
+<div class='goodcode'></div>
 
 ```haskell
 access add = let (s,a) = add `divMod` segmentSize
@@ -651,17 +693,21 @@ access add = let (s,a) = add `divMod` segmentSize
 
 If short, the whole `let` expression can be all on one line:
 
+<div class='goodcode'></div>
+
 ```haskell
 formatItem x = let (a,b) = x `divMod` 1000 in show a ++ '/' : show b
 ```
 
 <a id="if_then_else_2"></a>
-### if…then…else 
+### if…then…else
 
 Indent the `then` and `else`.
 
 The `then` and `else` are indented from the indent level of the line containing
 the `if`, not from the `if` itself.
+
+<div class='goodcode'></div>
 
 ```haskell
 foo = if ....
@@ -681,6 +727,8 @@ foo = bar $ \qux -> if predicate qux
 
 The same rule applies to do blocks nested within:
 
+<div class='goodcode'></div>
+
 ```haskell
 foo = do
     instruction <- decodeInstruction
@@ -697,12 +745,14 @@ foo = do
 **Exception:** If the expressions are short, it is acceptable to have the whole
 expression on one line:
 
+<div class='goodcode'></div>
+
 ```haskell
 adjective n = if odd n then "odd" else "even"
 ```
 
 <a id="List_Formatting"></a>
-### List Formatting 
+### List Formatting
 
 Use "leading comma" list format for multiple line spanning lists.
 
@@ -715,6 +765,8 @@ and record values.
 It is acceptable to have several values on a single line, "comma space"
 separated if they are grouped logically together.
 
+<div class='goodcode'></div>
+
 ```haskell
 exceptions =
     [ InvalidStatusCode
@@ -723,6 +775,8 @@ exceptions =
     ]
 ```
 
+<div class='goodcode'></div>
+
 ```haskell
 data Person = Person
     { firstName :: !String  -- ^ First name
@@ -730,6 +784,8 @@ data Person = Person
     , age       :: !Int     -- ^ Age
     } deriving (Eq, Show)
 ```
+
+<div class='goodcode'></div>
 
 ```haskell
 module CPU
@@ -754,10 +810,12 @@ module CPU
 ```
 
 <a id="Operators_Punctuation"></a>
-### Operators & Punctuation 
+### Operators & Punctuation
 
 Use one space around all operators. Use one space after commas and semicolons.
 Use no space after a backslash token.
+
+<div class='goodcode'></div>
 
 ```haskell
 sumSqDelta = dSumSqDelta + delta' * (val' - mean)
@@ -773,6 +831,8 @@ foldr (*) 1 list          -- treat operator in parenthesis as an identifier
 
 For operator sections, don't add a space on the "unapplied" side:
 
+<div class='goodcode'></div>
+
 ```haskell
 map (++ " likes noodles") people
 ```
@@ -780,6 +840,8 @@ map (++ " likes noodles") people
 **Exception:** For tuples and common operations consisting of single character
 values, it is acceptable to elide the space after the comma or operator when it
 improves readability:
+
+<div class='goodcode'></div>
 
 ```haskell
 swap (a,b) = (b,a)
@@ -790,7 +852,7 @@ go n m (a:as) | m == a = go (n+1) m as
 ```
 
 <a id="Parting_Words"></a>
-## Parting Words 
+## Parting Words
 
 Use common sense and *BE CONSISTENT*.
 
