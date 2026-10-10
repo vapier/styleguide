@@ -37,3 +37,15 @@ div.badcode + div.highlighter-rouge pre.highlight::before {
   right: 3px;
   top: 3px;
 }
+
+.tip {
+  background-color: #fffbd9;
+  padding: 6px 8px 6px 10px;
+  border-left: 6px solid #ffef70;
+}
+
+.note {
+  background-color: #e5ecf9;
+  padding: 6px 8px 6px 10px;
+  border-left: 6px solid #36c;
+}
