@@ -127,6 +127,7 @@ A “conflict” would be a case where this style guide suggests a pattern that 
 discouraged, or counter to the primary encouraged pattern in the Rust style
 guide.
 
+<section class="zippy" markdown="1">
 Why does the guidance in this style guide deviate from regular Rust style rules?
 
 Most style guides have three goals: consistency, readability, and encouraging
@@ -139,6 +140,8 @@ many of the ones at Google occasionally need to run codebase-spanning
 refactorings that are assisted by tooling: for this to work well, the code
 should be something tooling has an easy time working with. Consistency helps for
 this, but so does having deliberate refactor-friendly patterns.
+
+</section>
 
 <a id="api-design-context"></a>
 
@@ -210,11 +213,14 @@ Larger crates are allowed when
 force multiple types and traits to be included in one library, or if you're
 building a large foundational library.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Fine-grained library targets are recommended in Chromium due to the massive size
 of our codebase, non-local effects of adding dependencies in the build graph,
 and to improve performance of parallel compilation and build caching.
+
+</section>
 
 <a id="structure"></a>
 
@@ -235,6 +241,7 @@ Exception: Rust code in `//third_party` that is also built with
 [Cargo](https://doc.rust-lang.org/cargo/) should follow the conventional Cargo
 directory structure.
 
+<section class="zippy" markdown="1">
 Rationale
 
 The approach in Chromium is driven by the following factors:
@@ -246,6 +253,8 @@ The approach in Chromium is driven by the following factors:
 *   Multi-file `rust_library` targets should not create dedicated directories
     for submodules either; this ensures a consistent approach.
 
+</section>
+
 <a id="userdefined-item"></a>
 
 ### Name source files and leaf modules after the primary user-defined item
@@ -256,10 +265,13 @@ should be named after that item (e.g., `mod foo` and `foo.rs`).
 Leaf modules that are not primarily about any particular abstraction can be
 named as desired.
 
+<section class="zippy" markdown="1">
 Rationale
 
 This makes it easy to identify the content/purpose of a source file or leaf
 module at a glance.
+
+</section>
 
 <a id="non-leaf-modules"></a>
 
@@ -277,9 +289,12 @@ Exceptions:
     a non-leaf module may be fine. The goal is to not have a lot of code in
     these modules.
 
+<section class="zippy" markdown="1">
 Rationale
 
 This makes it easier to find things, and avoids mixing structure and contents.
+
+</section>
 
 <a id="glob-imports"></a>
 
@@ -315,10 +330,13 @@ discretion to allow it.
 
 This also means that defining preludes should be avoided.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Glob imports increase toil for code janitors running LSCs, and make it harder to
 know where a type comes from in contexts without xrefs.
+
+</section>
 
 <a id="use-statement"></a>
 
@@ -403,12 +421,15 @@ Exceptions:
     module name is a C++ namespace name, and multiple crates define the same
     submodules.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Many Rust codebases consistently keep a style such that unqualified lowercase
 names are assumed local, so `foo()` can be assumed to be from the same module.
 This rule largely exists to avoid reviewer disagreements, the benefit is mostly
 consistency and a minor edge on reading code without xrefs.
+
+</section>
 
 <a id="type-names"></a>
 
@@ -431,9 +452,12 @@ Exceptions:
 *   In code with lots of dependencies, where importing everything would lead to
     a very large import block with little benefit.
 
+<section class="zippy" markdown="1">
 Rationale
 
 This rule largely exists to avoid reviewer disagreements.
+
+</section>
 
 <a id="import-macro"></a>
 
@@ -451,6 +475,7 @@ This rule largely exists to avoid reviewer disagreements.
 
 Use the appropriate formatting tool (e.g., `git cl format` in Chromium).
 
+<section class="zippy" markdown="1">
 Configuration (for style guide authors)
 
 A codebase may choose to not apply the following `rustfmt` options if they care
@@ -468,6 +493,8 @@ about building on stable and the option is unavailable on their stable Rust:
 
 *   Usage of escapes for invisible characters in literals. E.g., if you wish to
     have text containing a Zero-Width joiner, use `\u{200D}`.
+
+</section>
 
 <a id="formatting-optout"></a>
 
@@ -500,12 +527,15 @@ Exception:
     would be unreasonably complex to write, understand, or maintain. This is a
     judgment call to be discussed during code review.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Generally, Rust allows representing object graphs without using shared ownership
 smart pointers. These pointers add runtime overhead and their own unique
 complexity. Engineers coming from other languages might tend to use `Rc` and
 `Arc` too quickly.
+
+</section>
 
 <a id="prefer-borrows"></a>
 
@@ -524,9 +554,12 @@ Note: This advice does not apply to cloning `Rc` or `Arc` pointers. Cloning
 reference-counted pointers does not create a deep copy, and is an expected way
 to use them.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Deep copies can be expensive to make due to memory allocation and data copying.
+
+</section>
 
 <a id="inputs-and-outputs"></a>
 
@@ -560,11 +593,14 @@ For context, see Clippy lints
 and
 [ptr_arg](https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg).
 
+<section class="zippy" markdown="1">
 Rationale
 
 Accepting reference types that don't mention specific smart pointers,
 containers, or wrappers makes functions more versatile and performant: callers
 can pass data held in a variety of ways without copying it first.
+
+</section>
 
 <a id="return-iterators"></a>
 
@@ -587,6 +623,7 @@ Exceptions:
 *   The function's intended purpose is creating a new owned collection.
 *   The function is returning a pre-existing vector.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Highly reusable library code generally should strive to provide more flexible
@@ -599,6 +636,8 @@ In application code, the usage patterns for a function are often easier to
 predict. If it is clear that performance is not a concern, or that data would be
 collected into a vector anyway, returning a vector makes for a simpler API.
 
+</section>
+
 <a id="accept-iterators"></a>
 
 ### Iterators vs. slices in function parameters
@@ -610,6 +649,7 @@ Note: In application code, accepting a slice `&[T]` is fine if it simplifies the
 code and if flexibility and performance advantages of iterators are not clearly
 needed.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Highly reusable library code generally should strive to provide more flexible
@@ -624,6 +664,8 @@ In application code, the usage patterns for a function are often easier to
 predict. If it is clear that performance is not a concern, or that callers would
 always have a vector anyway, accepting a slice makes for a simpler API.
 
+</section>
+
 <a id="accepting-into"></a>
 
 ### Accepting `Into`
@@ -637,6 +679,7 @@ requirement to use lots of `Into<T>` in your code.
 
 Note: Application code should almost never use `impl Into<T>` parameters.
 
+<section class="zippy" markdown="1">
 Rationale
 
 Using `impl Into<T>` allows a function to directly accept various arguments of
@@ -646,6 +689,8 @@ could be called with a `String` or a `&str` literal directly.
 The tradeoff here is balancing the convenience of avoiding a `.into()` at the
 callsite against the cost of generics (more complex API signature, increased
 code size, sometimes even type inference difficulties).
+
+</section>
 
 <a id="enum-vs-bool"></a>
 
@@ -796,6 +841,7 @@ Exceptions:
 
 *   Cases where code size matters.
 
+<section class="zippy" markdown="1">
 Rationale
 
 -   Efficiency
@@ -812,6 +858,8 @@ Rationale
     For example, a trait is not `dyn` compatible if it has generic functions,
     associated functions without a `self` parameter, or functions that return
     `Self`.
+
+</section>
 
 <a id="trait-vs-inherent-impl"></a>
 
@@ -858,6 +906,7 @@ Note: This rule is specifically about extension traits. It is relatively common
 to define a trait as an input trait (e.g., `DateLike`) and implement it on a
 bunch of foreign types.
 
+<section class="zippy" markdown="1">
 Examples
 
 ```rust
@@ -890,11 +939,15 @@ impl<T: ForeignTrait> ForeignTraitExt for T {
 }
 ```
 
+</section>
+
+<section class="zippy" markdown="1">
 Rationale
 
 When the same team owns the extension trait and the type being extended, this
 helps avoid method name conflicts between the base type and the extension trait
 or between two extension traits.
+</section>
 
 <a id="important-traits"></a>
 
@@ -950,10 +1003,13 @@ ways of constructing it, add an inherent `::new()`, `::new_from_foo()`, or
 Structs with all-public fields that are primarily used as a “bag of options” for
 a function should implement `Default`.
 
+<section class="zippy" markdown="1">
 Rationale
 
 This enables convenient use of struct update syntax
 (`Struct { a: 0, ..Default::default()}` ).
+
+</section>
 
 <a id="concurrency"></a>
 
@@ -1008,6 +1064,7 @@ against the costs:
     to work across the codebase.
 -   Large scale changes are more difficult and expensive to apply.
 
+<section class="zippy" markdown="1">
 Rationale
 
 **Prefer non-macro facilities:** Macros can create dialects of the language that
@@ -1017,6 +1074,7 @@ didn't use a macro. Macros are harder to write correctly than regular Rust code.
 
 **Use `macro_rules!` for simple code generation:** Since Rust macros operate on
 the AST, they can be less fragile than textual code generation.
+</section>
 
 <a id="naming"></a>
 
@@ -1183,6 +1241,7 @@ For example:
 pub fn get_named(items: &[FooItem], name: String) -> Option<&FooItem> {...}
 ```
 
+<section class="zippy" markdown="1">
 Rationale
 
 Many, though not all, languages have a different commenting convention (such as
@@ -1202,6 +1261,8 @@ to the Rust ecosystem:
     unpredictability from the documentation process.
 *   Doc comments are a part of the AST, and so can be produced and consumed by
     macros, including both `macro_rules!` macros and procedural macros.
+
+</section>
 
 <a id="other-features"></a>
 
@@ -1262,6 +1323,7 @@ Writing and naming getters and setters should follow these guidelines:
     `object.with_foo(|foo| frob(foo))`.
 *   `replace_foo()` for a setter that returns the old value.
 
+<section class="zippy" markdown="1">
 Examples
 
 ```rs
@@ -1286,6 +1348,8 @@ impl Stuff {
    fn replace_foo(&mut self, foo: Foo) -> Foo  { ... }
 }
 ```
+
+</section>
 
 <a id="closure-accessors"></a>
 
@@ -1336,9 +1400,12 @@ the code.
 Mark a public function as `const` only if you expect it to remain `const` in the
 future (or can commit to helping clients migrate when it changes).
 
+<section class="zippy" markdown="1">
 Rationale
 
 It’s a breaking change to turn a `const` function into a regular function.
+
+</section>
 
 <a id="operator-overloads"></a>
 
@@ -1367,6 +1434,7 @@ Exceptions:
 For context, see Clippy lint
 [`exhaustive_enums`](https://rust-lang.github.io/rust-clippy/master/index.html#exhaustive_enums).
 
+<section class="zippy" markdown="1">
 Rationale
 
 Marking an enum `#[non_exhaustive]` forces users to include a wildcard arm
@@ -1376,6 +1444,8 @@ new variants are added to the enum later.
 This rule is primarily important for enums used across team boundaries, because
 the scope of the breakage could be significant. Enums used only a small number
 of times can't create a large breakage and thus may ignore this rule.
+
+</section>
 
 <a id="non-exhaustive-structs"></a>
 
@@ -1394,6 +1464,7 @@ Exceptions:
 *   You want to enable your users to use functional record update (FRU) struct
     initialization syntax (`Person { name: "foo", ..Default::default() }`).
 
+<section class="zippy" markdown="1">
 Rationale
 
 Adding a new field (even a private one) to a struct with all public fields is a
@@ -1408,6 +1479,8 @@ This rule is primarily important for structs used across team boundaries,
 because the scope of the breakage could be significant. Structs used only a
 small number of times can't create a large breakage and thus may ignore this
 rule.
+
+</section>
 
 <a id="must-use-on-functions"></a>
 
@@ -1584,6 +1657,7 @@ situations:
     *   The implementation contains a bug (i.e., the client should file a bug
         report).
 
+<section class="zippy" markdown="1">
 Examples
 
 **Explaining why an assertion should hold**
@@ -1629,6 +1703,8 @@ impl Database {
 assert!(values.is_sorted(), "values should always be sorted");
 ```
 
+</section>
+
 <a id="combinator-chains"></a>
 
 ### Don't use iterator combinator chains when direct iteration is clearer
@@ -1646,6 +1722,7 @@ Combinators *are* preferable for shorter chains and for cases where the
 combinator itself provides a lot of logic that would otherwise have to be
 written out in the corresponding `for` loop.
 
+<section class="zippy" markdown="1">
 Examples
 
 **Complex combinator chains**
@@ -1743,6 +1820,8 @@ for v in values {
 }
 ```
 
+</section>
+
 <a id="catch-unwind"></a>
 
 ### Don't call `panic::catch_unwind`
@@ -1761,12 +1840,14 @@ Exceptions:
     <span class=chrome>Chrome</span>, <span class=android>Android</span>,
     <span class=fuchsia>Fuchsia</span>).
 
+<section class="zippy" markdown="1">
 Rationale
 
 Rust code may be used in many environments, and `panic::catch_unwind` will only
-function correctly in environments with `panic=unwind`. While the final panic
-disposition of prod binaries has not yet been determined, Chrome, Android, and
-Fuchsia all require `panic=abort`.
+function correctly in environments with `panic=unwind`. While the final
+panic disposition of prod binaries has not yet been determined, Chrome, Android,
+and Fuchsia all require `panic=abort`.
+</section>
 
 <a id="prefer-format-or-write"></a>
 
@@ -1780,11 +1861,14 @@ situations:
 *   To perform substitutions on a literal string (instead of using
     `str::replace`).
 
+<section class="zippy" markdown="1">
 Rationale
 
 *   `format!` / `write!` require fewer allocations than concatenating strings
     using `+`.
 *   Prefer standard format strings to inventing your own templating syntax.
+
+</section>
 
 <a id="test-framework"></a>
 

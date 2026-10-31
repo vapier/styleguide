@@ -368,6 +368,8 @@ pattern.
 export default class Foo { ... } // BAD!
 ```
 
+<section class="zippy">
+
 Why?
 
 Default exports provide no canonical name, which makes central maintenance
@@ -438,6 +440,8 @@ export class Foo {
   // only class stuff here
 }
 ```
+
+</section> <!-- why-zippy -->
 
 <div class="numbered"></div>
 
@@ -551,6 +555,8 @@ import {Bar} from './foo';
 import {type Foo, Bar} from './foo';
 ```
 
+<section class="zippy">
+
 Why?
 
 The TypeScript compiler automatically handles the distinction and does not
@@ -567,6 +573,8 @@ The TypeScript compiler can run in 2 modes:
 Note: If you need to force a runtime load for side effects, use `import '...';`.
 See [the imports](#imports).
 
+</section> <!-- why-zippy -->
+
 <div class="numbered"></div>
 
 <a id="export-type"></a>
@@ -581,6 +589,8 @@ Use `export type` when re-exporting a type, e.g.:
 export type {AnInterface} from './foo';
 ```
 
+<section class="zippy">
+
 Why?
 
 `export type` is useful to allow type re-exports in file-by-file transpilation.
@@ -593,6 +603,8 @@ import an API through a different path. A better way to split & guarantee type
 vs value usages of an API is to actually split the symbols into e.g.
 `UserService` and `AjaxUserService`. This is less error prone and also better
 communicates intent.
+
+</section> <!-- why-zippy -->
 
 <div class="numbered"></div>
 
@@ -1284,6 +1296,8 @@ class EmptyShoeStore extends ShoeStore {
 }
 ```
 
+<section class="zippy">
+
 Why?
 
 This code is generally surprising: authors might not expect that static fields
@@ -1292,6 +1306,8 @@ they can be overridden - this feature is not commonly used.
 
 This code also encourages an anti-pattern of having substantial static state,
 which causes problems with testability.
+
+</section> <!-- why-zippy -->
 
 <a id="disallowed-features-omitting-parents-with-new"></a>
 <a id="features-classes-constructors"></a>
@@ -1430,12 +1446,16 @@ class Clazz {
 }
 ```
 
+<section class="zippy">
+
 Why?
 
 Private identifiers cause substantial emit size and performance regressions when
 down-leveled by TypeScript, and are unsupported before ES2015. They can only be
 downleveled to ES2015, not lower. At the same time, they do not offer
 substantial benefits when static type checking is used to enforce visibility.
+
+</section> <!-- why-zippy -->
 
 <div class="numbered"></div>
 
@@ -1565,6 +1585,8 @@ Use either `protected` or `public` as appropriate to the property in question.
 TypeScript code *must not* use `obj['foo']` to bypass the visibility of a
 property.
 
+<section class="zippy">
+
 Why?
 
 When a property is `private`, you are declaring to both automated systems and
@@ -1576,6 +1598,8 @@ manages to bypass the visibility restriction.
 Though it might appear that `obj['foo']` can bypass visibility in the TypeScript
 compiler, this pattern can be broken by rearranging the build rules, and also
 violates [optimization compatibility](#optimization-compatibility).
+
+</section> <!-- why-zippy -->
 
 <a id="features-classes-getters-and-setters"></a>
 
@@ -2410,6 +2434,8 @@ const maybeLevel: SupportLevel|undefined = ...;
 enabled = maybeLevel !== undefined && maybeLevel !== SupportLevel.NONE;
 ```
 
+<section class="zippy">
+
 Why?
 
 For most purposes, it doesn't matter what number or string value an enum name is
@@ -2421,6 +2447,8 @@ particular, by default, the first declared enum value is falsy (because it is 0)
 while the others are truthy, which is likely to be unexpected. Readers of code
 that uses an enum value may not even know whether it's the first declared value
 or not.
+
+</section> <!-- why-zippy -->
 
 Using string concatenation to cast to string is discouraged, as we check that
 operands to the plus operator are of matching types.
@@ -2845,12 +2873,16 @@ try {
 }
 ```
 
+<section class="zippy">
+
 Why?
 
 Avoid
 [overly defensive programming](https://en.wikipedia.org/wiki/Defensive_programming#Offensive_programming).
 Repeating the same defenses against a problem that will not exist in most code
 leads to boiler-plate code that is not useful.
+
+</section> <!-- why-zippy -->
 
 <a id="features-empty-catch-blocks"></a>
 
@@ -3259,11 +3291,15 @@ Do not define new decorators. Only use the decorators defined by frameworks:
 -   Angular (e.g. `@Component`, `@NgModule`, etc.)
 -   Polymer (e.g. `@property`)
 
+<section class="zippy">
+
 Why?
 
 We generally want to avoid decorators, because they were an experimental feature
 that have since diverged from the TC39 proposal and have known bugs that won't
 be fixed.
+
+</section> <!-- why-zippy -->
 
 When using decorators, the decorator *must* immediately precede the symbol it
 decorates, with no empty lines between:
@@ -3330,11 +3366,15 @@ insertions.
 
 Code *must not* use `const enum`; use plain `enum` instead.
 
+<section class="zippy">
+
 Why?
 
 TypeScript enums already cannot be mutated; `const enum` is a separate language
 feature related to optimization that makes the enum invisible to JavaScript
 users of the module.
+
+</section> <!-- why-zippy -->
 
 <div class="numbered"></div>
 
@@ -3946,6 +3986,8 @@ const foo: Foo = {
 }
 ```
 
+<section class="zippy">
+
 Why?
 
 The "badFoo" object above relies on type inference. Additional fields could be
@@ -3994,6 +4036,8 @@ makeSound(dog);
 makeSound(horse);
 ```
 
+</section> <!-- why-zippy -->
+
 <a id="interfaces-vs-type-aliases"></a>
 
 <div class="numbered"></div>
@@ -4028,6 +4072,8 @@ type User = {
 }
 ```
 
+<section class="zippy">
+
 Why?
 
 These forms are nearly equivalent, so under the principle of just choosing one
@@ -4037,6 +4083,8 @@ are also
 That page quotes the TypeScript team lead: "Honestly, my take is that it should
 really just be interfaces for anything that they can model. There is no benefit
 to type aliases when there are so many issues around display/perf."
+
+</section> <!-- why-zippy -->
 
 <div class="numbered"></div>
 
@@ -4490,6 +4538,8 @@ All TypeScript files must pass type checking using the standard tool chain.
 
 Do not use `@ts-ignore` nor the variants `@ts-expect-error` or `@ts-nocheck`.
 
+<section class="zippy">
+
 Why?
 
 They superficially seem to be an easy way to "fix" a compiler error, but in
@@ -4499,6 +4549,8 @@ be fixed more directly.
 For example, if you are using `@ts-ignore` to suppress a type error, then it's
 hard to predict what types the surrounding code will end up seeing. For many
 type errors, the advice in [how to best use `any`](#any) is useful.
+
+</section> <!-- why-zippy -->
 
 You may use `@ts-expect-error` in unit tests, though you generally *should not*.
 `@ts-expect-error` suppresses all errors. It's easy to accidentally over-match

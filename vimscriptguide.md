@@ -25,6 +25,7 @@ By following these guidelines, you can hope to make your scripts portable.
 
 ### Strings
 
+<section class="zippy">
 Prefer single quoted strings
 
 Double quoted strings are semantically different in vimscript, and you probably
@@ -32,9 +33,11 @@ don't want them (they break regexes).
 
 Use double quoted strings when you need an escape sequence (such as `"\n"`) or
 if you know it doesn't matter and you need to embed single quotes.
+</section>
 
 ### Matching Strings
 
+<section class="zippy">
 Use the `=~#` or `=~?` operator families over the `=~` family.
 
 The matching behavior depends upon the user's ignorecase and smartcase settings
@@ -42,9 +45,11 @@ and on whether you compare them with the `=~`, `=~#`, or `=~?` family of
 operators. Use the `=~#` and `=~?` operator families explicitly when comparing
 strings unless you explicitly need to honor the user's case sensitivity
 settings.
+</section>
 
 ### Regular Expressions
 
+<section class="zippy">
 Prefix all regexes with `\m\C`.
 
 In addition to the case sensitivity settings, regex behavior depends upon the
@@ -53,9 +58,11 @@ set, prepend all regexes with `\m\C`.
 
 You are welcome to use other magic levels (`\v`) and case sensitivities (`\c`)
 so long as they are intentional and explicit.
+</section>
 
 ### Dangerous commands
 
+<section class="zippy">
 Avoid commands with unintended side effects.
 
 Avoid using `:s[ubstitute]` as it moves the cursor and prints error messages.
@@ -63,9 +70,11 @@ Prefer functions (such as `search()`) better suited to scripts.
 
 For many vim commands, functions exist that do the same thing with fewer side
 effects. See `:help function-list` for a list of built-in functions.
+</section>
 
 ### Fragile commands
 
+<section class="zippy">
 Avoid commands that rely on user settings.
 
 Always use `normal!` instead of `normal`. The latter depends upon the user's key
@@ -74,17 +83,21 @@ mappings and could do anything.
 Avoid `:s[ubstitute]`, as its behavior depends upon a number of local settings.
 
 The same applies to other commands not listed here.
+</section>
 
 ### Catching Exceptions
 
+<section class="zippy">
 Match error codes, not error text.
 
 Error text may be locale dependant.
+</section>
 
 ## General Guidelines
 
 ### Messaging
 
+<section class="zippy">
 Message the user infrequently.
 
 Loud scripts are annoying. Message the user only when:
@@ -92,8 +105,11 @@ Loud scripts are annoying. Message the user only when:
 *   A long-running process has kicked off.
 *   An error has occurred.
 
+</section>
+
 ### Type checking
 
+<section class="zippy">
 Use strict and explicit checks where possible.
 
 Vimscript has unsafe, unintuitive behavior when dealing with some types. For
@@ -109,24 +125,30 @@ errors.
 
 Use `:unlet` for variables that may change types, particularly those assigned
 inside loops.
+</section>
 
 ### Python
 
+<section class="zippy">
 Use sparingly.
 
 Use python only when it provides critical functionality, for example when
 writing threaded code.
+</section>
 
 ### Other Languages
 
+<section class="zippy">
 Use vimscript instead.
 
 Avoid using other scripting languages such as ruby and lua. We can not guarantee
 that the end user's vim has been compiled with support for non-vimscript
 languages.
+</section>
 
 ### Boilerplate
 
+<section class="zippy">
 Use [maktaba](https://github.com/google/maktaba).
 
 maktaba removes boilerplate, including:
@@ -135,8 +157,11 @@ maktaba removes boilerplate, including:
 *   Error handling
 *   Dependency checking
 
+</section>
+
 ### Plugin layout
 
+<section class="zippy">
 Organize functionality into modular plugins
 
 Group your functionality as a plugin, unified in one directory (or code
@@ -145,9 +170,11 @@ suffix if desired). It should be split into plugin/, autoload/, etc.
 subdirectories as necessary, and it should declare metadata in the
 addon-info.json format (see the [VAM documentation](https://goo.gl/CUXJZC) for
 details).
+</section>
 
 ### Functions
 
+<section class="zippy">
 In the autoload/ directory, defined with `[!]` and `[abort]`.
 
 Autoloading allows functions to be loaded on demand, which makes startuptime
@@ -162,20 +189,23 @@ should be extracted into functions and autoloaded.
 `[!]` allows developers to reload their functions without complaint.
 
 `[abort]` forces the function to halt when it encounters an error.
+</section>
 
 ### Commands
 
-In the plugin/commands.vim or under the ftplugin/ directory, defined without
-`[!]`.
+<section class="zippy">
+In the plugin/commands.vim or under the ftplugin/ directory, defined without `[!]`.
 
 General commands go in `plugin/commands.vim`. Filetype-specific commands go in
 `ftplugin/`.
 
 Excluding `[!]` prevents your plugin from silently clobbering existing commands.
 Command conflicts should be resolved by the user.
+</section>
 
 ### Autocommands
 
+<section class="zippy">
 Place them in `plugin/autocmds.vim`, within augroups.
 
 Place all autocommands in augroups.
@@ -185,23 +215,27 @@ prefixed with the plugin name.
 
 Clear the augroup with `autocmd!` before defining new autocommands in the
 augroup. This makes your plugin re-entrable.
+</section>
 
 ### Mappings
 
-Place them in `plugin/mappings.vim`, using `maktaba#plugin#MapPrefix` to get a
-prefix.
+<section class="zippy">
+Place them in `plugin/mappings.vim`, using `maktaba#plugin#MapPrefix` to get a prefix.
 
 All key mappings should be defined in `plugin/mappings.vim`.
 
 Partial mappings (see `:help using-<Plug>`.) should be defined in
 `plugin/plugs.vim`.
+</section>
 
 ### Settings
 
+<section class="zippy">
 Change settings locally
 
 Use `:setlocal` and `&l:` instead of `:set` and `&` unless you have explicit
 reason to do otherwise.
+</section>
 
 ## Style
 
@@ -210,6 +244,7 @@ python style.
 
 ### Whitespace
 
+<section class="zippy">
 Similar to python.
 
 *   Use two spaces for indents
@@ -259,8 +294,11 @@ Similar to python.
     command MyCommand2 call myplugin#bar()
     ```
 
+</section>
+
 ### Naming
 
+<section class="zippy">
 In general, use `plugin-names-like-this`, `FunctionNamesLikeThis`,
 `CommandNamesLikeThis`, `augroup_names_like_this`, `variable_names_like_this`.
 Always prefix variables with their scope.
@@ -302,3 +340,4 @@ window-local semantics.
 `l:` and `v:` should be used for consistency, future proofing, and to avoid
 subtle bugs. They are not strictly required. Add them in new code but don't go
 out of your way to add them elsewhere.
+</section>
